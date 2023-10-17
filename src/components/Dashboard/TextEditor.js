@@ -1,16 +1,18 @@
 import React, { useState, useRef } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, ContentState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
+import formatEmail from "../Function/Function";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
 const TextEditor = (props) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const emailInputRef = useRef();
   const subjectInputRef = useRef();
 
-  const formSubmitHandler = async (e) => {
-    e.preventDefault();
+  const formSubmitHandler = async (event) => {
+    event.preventDefault();
     const enteredEmail = emailInputRef.current.value;
     const enteredSubject = subjectInputRef.current.value;
 
@@ -19,16 +21,22 @@ const TextEditor = (props) => {
       .blocks.map((block) => block.text)
       .join("\n");
 
-    // You can use Axios or another method to send the email content, email, and subject
-    // Example Axios request:
     try {
-      await axios.post("your-email-api-endpoint", {
-        to: enteredEmail,
-        subject: enteredSubject,
-        text: contentAsPlainText,
-      });
+      const sendEmailData = await axios.post(
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+          enteredEmail
+        )}/emailData.json`,
+        {
+          id: uuidv4(),
+          email: enteredEmail,
+          subject: enteredSubject,
+          emailData: contentAsPlainText,
+        }
+      );
+      console.log(sendEmailData);
+      console.log(sendEmailData.data);
     } catch (error) {
-      console.error("Error sending email:", error);
+      console.log(error);
     }
   };
 
