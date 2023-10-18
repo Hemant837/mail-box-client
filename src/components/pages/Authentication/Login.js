@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../../store/auth-slice";
 
 const Login = () => {
   const emailInputRef = useRef();
@@ -11,6 +13,7 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validateForm = () => {
     const enteredEmail = emailInputRef.current.value;
@@ -54,7 +57,13 @@ const Login = () => {
       );
 
       setIsLoading(false);
+      dispatch(authActions.isLogin());
+
       localStorage.setItem("token", loginDetails.data.idToken);
+
+      dispatch(authActions.setIdToken(loginDetails.data.idToken));
+      dispatch(authActions.setUserEmail(loginDetails.data.email));
+
       navigate("/dashboard");
     } catch (error) {
       setIsLoading(false);

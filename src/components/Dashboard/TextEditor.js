@@ -2,42 +2,43 @@ import React, { useState, useRef } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
-import formatEmail from "../Function/Function";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../../store/ui-slice";
+import { receiverDataActions } from "../../store/receiverData-slice";
 
-const TextEditor = (props) => {
+const TextEditor = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const emailInputRef = useRef();
-  const subjectInputRef = useRef();
+
+  const receiverEmailInputRef = useRef();
+  const receiverSubjectInputRef = useRef();
+
+  const dispatch = useDispatch();
+  const sendersEmail = useSelector((state) => state.auth.userEmail);
+
+  const stopComposing = () => {
+    dispatch(uiActions.toggle());
+  };
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
-    const enteredEmail = emailInputRef.current.value;
-    const enteredSubject = subjectInputRef.current.value;
+    const receiverEmail = receiverEmailInputRef.current.value;
+    const receiverSubject = receiverSubjectInputRef.current.value;
 
     const content = editorState.getCurrentContent();
     const contentAsPlainText = convertToRaw(content)
       .blocks.map((block) => block.text)
       .join("\n");
 
-    try {
-      const sendEmailData = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
-          enteredEmail
-        )}/emailData.json`,
-        {
-          id: uuidv4(),
-          email: enteredEmail,
-          subject: enteredSubject,
-          emailData: contentAsPlainText,
-        }
-      );
-      console.log(sendEmailData);
-      console.log(sendEmailData.data);
-    } catch (error) {
-      console.log(error);
-    }
+    const sendToReceiverData = {
+      id: uuidv4(),
+      sendersEmail: sendersEmail,
+      receiverSubject: receiverSubject,
+      receiverData: contentAsPlainText,
+    };
+    dispatch(receiverDataActions.setReceiverEmail(receiverEmail));
+    dispatch(receiverDataActions.setReceiverData(sendToReceiverData));
+    console.log(sendToReceiverData);
   };
 
   const onEditorStateChange = (newEditorState) => {
@@ -52,18 +53,18 @@ const TextEditor = (props) => {
             type="email"
             placeholder="send to"
             className="m-4 w-96 p-2 border"
-            ref={emailInputRef}
+            ref={receiverEmailInputRef}
           />
           <input
             type="text"
             placeholder="subject"
             className="ml-4 mb-4 w-96 p-2 border"
-            ref={subjectInputRef}
+            ref={receiverSubjectInputRef}
           />
         </div>
         <button
           className="hover:border p-4 mr-2 rounded-3xl"
-          onClick={props.onCancel}
+          onClick={stopComposing}
         >
           x
         </button>
