@@ -2,11 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const receiverDataSlice = createSlice({
   name: "receiverData",
-  initialState: { data: [], totalQuantity: 0, receiverEmail: "" },
+  initialState: {
+    data: [],
+    sentQuantity: 0,
+    inboxQuantity: 0,
+    receiverEmail: "",
+    sendersData: [],
+  },
   reducers: {
     setReceiverData(state, action) {
       state.data.push(action.payload);
-      state.totalQuantity++;
+      state.sentQuantity++;
+    },
+
+    setSenderData(state, action) {
+      state.sendersData.push(action.payload);
+      state.inboxQuantity++;
     },
 
     setReceiverEmail(state, action) {

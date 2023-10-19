@@ -36,9 +36,18 @@ const TextEditor = () => {
       receiverSubject: receiverSubject,
       receiverData: contentAsPlainText,
     };
+    const sendersData = {
+      id: uuidv4(),
+      sendersEmail: receiverEmail,
+      receiverSubject: receiverSubject,
+      receiverData: contentAsPlainText,
+    };
+
+    dispatch(receiverDataActions.setSenderData(sendersData));
     dispatch(receiverDataActions.setReceiverEmail(receiverEmail));
     dispatch(receiverDataActions.setReceiverData(sendToReceiverData));
-    console.log(sendToReceiverData);
+    dispatch(uiActions.toggle());
+    
   };
 
   const onEditorStateChange = (newEditorState) => {
