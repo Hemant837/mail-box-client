@@ -53,16 +53,16 @@ const TextEditor = () => {
 
     try {
       const sentDataToFirebase = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/sent/${formatEmail(
           sentEmail
-        )}/sent.json`,
+        )}.json`,
         sentDatas
       );
       console.log(sentDataToFirebase.data);
       const InboxDataToFirebase = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/inbox/${formatEmail(
           inboxEmail
-        )}/inbox.json`,
+        )}.json`,
         inboxDatas
       );
       console.log(InboxDataToFirebase.data);

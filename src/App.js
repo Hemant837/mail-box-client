@@ -36,26 +36,26 @@ function App() {
     }
   }, [dispatch]);
 
-  //   useEffect(() => {
-  // dispatch(userDataActions.setSentEmail(localStorage.getItem("sentEmail")))
-  //   }, [])
+    useEffect(() => {
+  dispatch(userDataActions.setSentEmail(sentEmail))
+    }, [])
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
         if (sentEmail) {
           const response = await axios.get(
-            `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+            `https://mail-box-client-8c444-default-rtdb.firebaseio.com/sent/${formatEmail(
               sentEmail
-            )}/sent.json`
+            )}.json`
           );
           console.log("response", response.data);
         }
         if (isAuthenticated) {
           const newResponse = await axios.get(
-            `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+            `https://mail-box-client-8c444-default-rtdb.firebaseio.com/inbox/${formatEmail(
               inboxEmail
-            )}/inbox.json`
+            )}.json`
           );
           console.log("newResponse", newResponse.data);
           dispatch(
