@@ -5,16 +5,18 @@ import { EditorState, convertToRaw } from "draft-js";
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../store/ui-slice";
-import { receiverDataActions } from "../../store/receiverData-slice";
+import { userDataActions } from "../../store/userData-slice";
+import axios from "axios";
+import formatEmail from "../Function/Function";
 
 const TextEditor = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
-  const receiverEmailInputRef = useRef();
-  const receiverSubjectInputRef = useRef();
+  const sentEmailInputRef = useRef();
+  const sentSubjectInputRef = useRef();
 
   const dispatch = useDispatch();
-  const sendersEmail = useSelector((state) => state.auth.userEmail);
+  const inboxEmail = useSelector((state) => state.auth.userEmail);
 
   const stopComposing = () => {
     dispatch(uiActions.toggle());
@@ -22,32 +24,53 @@ const TextEditor = () => {
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
-    const receiverEmail = receiverEmailInputRef.current.value;
-    const receiverSubject = receiverSubjectInputRef.current.value;
+    const sentEmail = sentEmailInputRef.current.value;
+    const sentSubject = sentSubjectInputRef.current.value;
 
     const content = editorState.getCurrentContent();
     const contentAsPlainText = convertToRaw(content)
       .blocks.map((block) => block.text)
       .join("\n");
 
-    const sendToReceiverData = {
+    const sentDatas = {
       id: uuidv4(),
-      sendersEmail: sendersEmail,
-      receiverSubject: receiverSubject,
-      receiverData: contentAsPlainText,
-    };
-    const sendersData = {
-      id: uuidv4(),
-      sendersEmail: receiverEmail,
-      receiverSubject: receiverSubject,
-      receiverData: contentAsPlainText,
+      sentEmail: sentEmail,
+      sentSubject: sentSubject,
+      sentData: contentAsPlainText,
     };
 
-    dispatch(receiverDataActions.setSenderData(sendersData));
-    dispatch(receiverDataActions.setReceiverEmail(receiverEmail));
-    dispatch(receiverDataActions.setReceiverData(sendToReceiverData));
+    const inboxDatas = {
+      id: uuidv4(),
+      inboxEmail: inboxEmail,
+      inboxSubject: sentSubject,
+      inboxData: contentAsPlainText,
+    };
+
+    dispatch(userDataActions.setSentDatas(sentDatas));
+    dispatch(userDataActions.setSentEmail(sentEmail));
+    dispatch(userDataActions.setInboxDatas(inboxDatas));
     dispatch(uiActions.toggle());
-    
+
+    try {
+      const sentDataToFirebase = await axios.post(
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+          sentEmail
+        )}/sent.json`,
+        sentDatas
+      );
+      console.log(sentDataToFirebase.data);
+      const InboxDataToFirebase = await axios.post(
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+          inboxEmail
+        )}/inbox.json`,
+        inboxDatas
+      );
+      console.log(InboxDataToFirebase.data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // localStorage.setItem("sentEmail", sentEmail)
   };
 
   const onEditorStateChange = (newEditorState) => {
@@ -62,13 +85,13 @@ const TextEditor = () => {
             type="email"
             placeholder="send to"
             className="m-4 w-96 p-2 border"
-            ref={receiverEmailInputRef}
+            ref={sentEmailInputRef}
           />
           <input
             type="text"
             placeholder="subject"
             className="ml-4 mb-4 w-96 p-2 border"
-            ref={receiverSubjectInputRef}
+            ref={sentSubjectInputRef}
           />
         </div>
         <button
