@@ -48,28 +48,39 @@ function App() {
         const fetchSentData = await axios.get(
           `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`
         );
+
         console.log("fetchSentData", Object.values(fetchSentData.data));
+
         const newSentDatas = Object.keys(fetchSentData.data).map((key) => {
           return { firebaseId: key, ...fetchSentData.data[key] };
         });
+
         console.log("newSentDatas", newSentDatas);
+
         dispatch(
           userDataActions.replaceSentData(Object.values(fetchSentData.data))
         );
+
         dispatch(userDataActions.setSentEmail(newSentDatas[0].to));
+
         const fetchInboxData = await axios.get(
           `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`
         );
+
         console.log("fetchInboxData", fetchInboxData.data);
+
         const newInboxDatas = Object.keys(fetchInboxData.data).map((key) => {
           return { firebaseId: key, ...fetchInboxData.data[key] };
         });
+
         console.log("newInboxDatas", newInboxDatas);
+
         dispatch(userDataActions.replaceInboxData(newInboxDatas));
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchAllDatas();
   }, [currentUserEmail, dispatch]);
 
