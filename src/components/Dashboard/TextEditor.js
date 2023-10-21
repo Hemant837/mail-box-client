@@ -46,29 +46,29 @@ const TextEditor = () => {
       inboxData: contentAsPlainText,
     };
 
-    dispatch(userDataActions.setSentDatas(sentDatas));
-    dispatch(userDataActions.setSentEmail(sentEmail));
-    dispatch(userDataActions.setInboxDatas(inboxDatas));
-    dispatch(uiActions.toggle());
-
     try {
       const sentDataToFirebase = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/sent/${formatEmail(
-          sentEmail
-        )}.json`,
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+          inboxEmail
+        )}/sent.json`,
         sentDatas
       );
       console.log(sentDataToFirebase.data);
+      dispatch(userDataActions.setSentDatas(sentDatas));
       const InboxDataToFirebase = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/inbox/${formatEmail(
-          inboxEmail
-        )}.json`,
+        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+          sentEmail
+        )}/inbox.json`,
         inboxDatas
       );
       console.log(InboxDataToFirebase.data);
+      dispatch(userDataActions.setSentEmail(sentEmail));
+      dispatch(userDataActions.setInboxDatas(inboxDatas));
     } catch (error) {
       console.log(error);
     }
+    dispatch(uiActions.toggle());
+    
 
     // localStorage.setItem("sentEmail", sentEmail)
   };

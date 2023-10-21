@@ -13,7 +13,7 @@ function App() {
   const dispatch = useDispatch();
   const sentEmail = useSelector((state) => state.userData.sentEmail);
   const inboxEmail = useSelector((state) => state.auth.userEmail);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
     const idToken = localStorage.getItem("token");
@@ -26,6 +26,7 @@ function App() {
           );
 
           console.log(userDetails.data);
+          dispatch(authActions.setIdToken(idToken));
           dispatch(authActions.setUserEmail(userDetails.data.users[0].email));
           dispatch(authActions.isLogin());
         } catch (error) {
@@ -36,38 +37,42 @@ function App() {
     }
   }, [dispatch]);
 
-    useEffect(() => {
-  dispatch(userDataActions.setSentEmail(sentEmail))
-    }, [])
+  // useEffect(() => {
+  //   const fetchAllData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+  //           inboxEmail
+  //         )}/sent.json`
+  //       );
 
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        if (sentEmail) {
-          const response = await axios.get(
-            `https://mail-box-client-8c444-default-rtdb.firebaseio.com/sent/${formatEmail(
-              sentEmail
-            )}.json`
-          );
-          console.log("response", response.data);
-        }
-        if (isAuthenticated) {
-          const newResponse = await axios.get(
-            `https://mail-box-client-8c444-default-rtdb.firebaseio.com/inbox/${formatEmail(
-              inboxEmail
-            )}.json`
-          );
-          console.log("newResponse", newResponse.data);
-          dispatch(
-            userDataActions.replaceInboxData(Object.keys(newResponse.data))
-          );
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchAllData();
-  }, [inboxEmail, sentEmail]);
+  //       console.log(response.data);
+  //       const sentNewData = Object.keys(response.data).map((key) => {
+  //         return { firebaseId: key, ...response.data[key] };
+  //       });
+
+  //       console.log("sentNewData", sentNewData);
+  //       dispatch(userDataActions.replaceSentData(sentNewData));
+  //       dispatch(userDataActions.setSentEmail(sentNewData[0].sentEmail));
+
+  //       const newResponse = await axios.get(
+  //         `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+  //           sentNewData[0].sentEmail
+  //         )}/inbox.json`
+  //       );
+  //       console.log("newResponse", newResponse.data);
+  //       const inboxNewData = Object.keys(newResponse.data).map((key) => {
+  //         return { firebaseId: key, ...newResponse.data[key] };
+  //       });
+  //       console.log("inboxNewData", inboxNewData);
+
+  //       dispatch(userDataActions.replaceInboxData(inboxNewData));
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchAllData();
+  // }, [inboxEmail, dispatch]);
 
   return <RouterProvider router={router}></RouterProvider>;
 }

@@ -3,9 +3,9 @@ import Login from "../pages/Authentication/Login";
 import Signup from "../pages/Authentication/Signup";
 import Dashboard from "../Dashboard/Dashboard";
 import RootLayout from "../pages/Root";
-import Inbox from "../Sidebar/SidebarPages/Inbox";
+import Inbox from "../Sidebar/SidebarPages/Inbox/Inbox";
 import Starred from "../Sidebar/SidebarPages/Starred";
-import Sent from "../Sidebar/SidebarPages/Sent";
+import Sent from "../Sidebar/SidebarPages/Sent/Sent";
 import Important from "../Sidebar/SidebarPages/Important";
 import Trash from "../Sidebar/SidebarPages/Trash";
 
