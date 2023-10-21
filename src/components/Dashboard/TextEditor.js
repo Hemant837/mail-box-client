@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
-import { v4 as uuidv4 } from "uuid";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../store/ui-slice";
 import { userDataActions } from "../../store/userData-slice";
@@ -10,13 +9,14 @@ import axios from "axios";
 import formatEmail from "../Function/Function";
 
 const TextEditor = () => {
+  const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
-  const sentEmailInputRef = useRef();
-  const sentSubjectInputRef = useRef();
+  const toEmailInputRef = useRef();
+  const subjectInputRef = useRef();
 
   const dispatch = useDispatch();
-  const inboxEmail = useSelector((state) => state.auth.userEmail);
+  const currentUserEmail = useSelector((state) => state.auth.userEmail);
 
   const stopComposing = () => {
     dispatch(uiActions.toggle());
@@ -24,51 +24,70 @@ const TextEditor = () => {
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
-    const sentEmail = sentEmailInputRef.current.value;
-    const sentSubject = sentSubjectInputRef.current.value;
+    const toEmail = toEmailInputRef.current.value;
+    const subject = subjectInputRef.current.value;
 
+    const formatDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      const seconds = String(date.getSeconds()).padStart(2, "0");
+
+      return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+    };
+    const formattedDate = formatDate(new Date());
     const content = editorState.getCurrentContent();
-    const contentAsPlainText = convertToRaw(content)
+    const message = convertToRaw(content)
       .blocks.map((block) => block.text)
       .join("\n");
 
+    // login as  vermahemant837@gmail.com
+
     const sentDatas = {
-      id: uuidv4(),
-      sentEmail: sentEmail,
-      sentSubject: sentSubject,
-      sentData: contentAsPlainText,
+      to: toEmail, // vermahemant095@gmail.com
+      subject: subject,
+      message: message,
+      time: formattedDate,
+      read: false,
+      recieve: false,
+      send: true,
+      sender: currentUserEmail, // vermahemant837@gmail.com
     };
 
+    // vermahemant095@gmail.com
+
     const inboxDatas = {
-      id: uuidv4(),
-      inboxEmail: inboxEmail,
-      inboxSubject: sentSubject,
-      inboxData: contentAsPlainText,
+      from: currentUserEmail, // vermahemant837@gmail.com
+      subject: subject,
+      message: message,
+      time: formattedDate,
+      read: false,
+      recieve: true,
+      send: false,
+      to: toEmail, // vermahemant095@gmail.com
     };
 
     try {
-      const sentDataToFirebase = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
-          inboxEmail
-        )}/sent.json`,
-        sentDatas
-      );
-      console.log(sentDataToFirebase.data);
-      dispatch(userDataActions.setSentDatas(sentDatas));
-      const InboxDataToFirebase = await axios.post(
-        `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
-          sentEmail
-        )}/inbox.json`,
+      const inboxDatasResponse = await axios.post(
+        `${baseURL}/inbox/${formatEmail(toEmail)}.json`,
         inboxDatas
       );
-      console.log(InboxDataToFirebase.data);
-      dispatch(userDataActions.setSentEmail(sentEmail));
-      dispatch(userDataActions.setInboxDatas(inboxDatas));
+      console.log(inboxDatasResponse.data);
+
+      const sentDatasResposne = await axios.post(
+        `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`,
+        sentDatas
+      );
+      console.log(sentDatasResposne.data);
     } catch (error) {
       console.log(error);
     }
+    dispatch(userDataActions.setInboxDatas(inboxDatas));
+    dispatch(userDataActions.setSentDatas(sentDatas));
+
     dispatch(uiActions.toggle());
-    
 
     // localStorage.setItem("sentEmail", sentEmail)
   };
@@ -85,13 +104,13 @@ const TextEditor = () => {
             type="email"
             placeholder="send to"
             className="m-4 w-96 p-2 border"
-            ref={sentEmailInputRef}
+            ref={toEmailInputRef}
           />
           <input
             type="text"
             placeholder="subject"
             className="ml-4 mb-4 w-96 p-2 border"
-            ref={sentSubjectInputRef}
+            ref={subjectInputRef}
           />
         </div>
         <button

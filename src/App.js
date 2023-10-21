@@ -10,10 +10,12 @@ import { userDataActions } from "./store/userData-slice";
 // let isInitial = true;
 
 function App() {
-  const dispatch = useDispatch();
+  const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
+
+  const currentUserEmail = useSelector((state) => state.auth.userEmail);
   const sentEmail = useSelector((state) => state.userData.sentEmail);
-  const inboxEmail = useSelector((state) => state.auth.userEmail);
-  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const idToken = localStorage.getItem("token");
@@ -37,42 +39,45 @@ function App() {
     }
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const fetchAllData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
-  //           inboxEmail
-  //         )}/sent.json`
-  //       );
+  console.log(currentUserEmail);
 
-  //       console.log(response.data);
-  //       const sentNewData = Object.keys(response.data).map((key) => {
-  //         return { firebaseId: key, ...response.data[key] };
-  //       });
+  // for fetching sentDatas and inboxDatas
+  useEffect(() => {
+    const fetchAllDatas = async () => {
+      try {
+        const fetchSentData = await axios.get(
+          `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`
+        );
+        console.log("fetchSentData", Object.values(fetchSentData.data));
+        const newSentDatas = Object.keys(fetchSentData.data).map((key) => {
+          return { firebaseId: key, ...fetchSentData.data[key] };
+        });
+        console.log("newSentDatas", newSentDatas);
+        dispatch(
+          userDataActions.replaceSentData(Object.values(fetchSentData.data))
+        );
+        dispatch(userDataActions.setSentEmail(newSentDatas[0].to));
+        const fetchInboxData = await axios.get(
+          `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`
+        );
+        console.log("fetchInboxData", fetchInboxData.data);
+        const newInboxDatas = Object.keys(fetchInboxData.data).map((key) => {
+          return { firebaseId: key, ...fetchInboxData.data[key] };
+        });
+        console.log("newInboxDatas", newInboxDatas);
+        dispatch(userDataActions.replaceInboxData(newInboxDatas));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllDatas();
+  }, [currentUserEmail, dispatch]);
 
-  //       console.log("sentNewData", sentNewData);
-  //       dispatch(userDataActions.replaceSentData(sentNewData));
-  //       dispatch(userDataActions.setSentEmail(sentNewData[0].sentEmail));
+  if (sentEmail) {
+    console.log("sentEmail", sentEmail);
+  }
 
-  //       const newResponse = await axios.get(
-  //         `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
-  //           sentNewData[0].sentEmail
-  //         )}/inbox.json`
-  //       );
-  //       console.log("newResponse", newResponse.data);
-  //       const inboxNewData = Object.keys(newResponse.data).map((key) => {
-  //         return { firebaseId: key, ...newResponse.data[key] };
-  //       });
-  //       console.log("inboxNewData", inboxNewData);
-
-  //       dispatch(userDataActions.replaceInboxData(inboxNewData));
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchAllData();
-  // }, [inboxEmail, dispatch]);
+  // for fetching inboxDatas
 
   return <RouterProvider router={router}></RouterProvider>;
 }

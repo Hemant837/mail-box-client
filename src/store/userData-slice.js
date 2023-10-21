@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const userDataSlice = createSlice({
-  name: "receiverData",
+  name: "userData",
   initialState: {
     sentDatas: [],
     sentQuantity: 0,
