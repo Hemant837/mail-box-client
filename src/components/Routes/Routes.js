@@ -9,7 +9,7 @@ import Starred from "../Sidebar/SidebarPages/Starred";
 import Sent from "../Sidebar/SidebarPages/Sent/Sent";
 import Important from "../Sidebar/SidebarPages/Important";
 import Trash from "../Sidebar/SidebarPages/Trash";
-
+import SentViewDetails from "../Sidebar/SidebarPages/Sent/SentViewDetails";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +41,7 @@ const router = createBrowserRouter([
             path: "/dashboard/sent",
             element: <Sent />,
           },
+          { path: "/dashboard/sent/:sentId", element: <SentViewDetails /> },
           {
             path: "/dashboard/important",
             element: <Important />,

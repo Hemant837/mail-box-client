@@ -7,7 +7,7 @@ const InboxViewDetails = () => {
   const inboxItem = inboxDatas.find((item) => item.firebaseId === inboxId);
 
   if (!inboxItem) {
-    return <div>Item not found</div>;
+    return <div className="font-semibold text-center">Item not found</div>;
   }
 
   return (

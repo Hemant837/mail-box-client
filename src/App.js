@@ -13,7 +13,7 @@ function App() {
   const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
 
   const currentUserEmail = useSelector((state) => state.auth.userEmail);
-  const sentEmail = useSelector((state) => state.userData.sentEmail);
+  // const sentEmail = useSelector((state) => state.userData.sentEmail);
 
   const dispatch = useDispatch();
 
@@ -39,7 +39,7 @@ function App() {
     }
   }, [dispatch]);
 
-  console.log(currentUserEmail);
+  // console.log(currentUserEmail);
 
   // for fetching sentDatas and inboxDatas
   useEffect(() => {
@@ -49,16 +49,16 @@ function App() {
           `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`
         );
 
-        console.log("fetchSentData", Object.values(fetchSentData.data));
+        // console.log("fetchSentData", Object.values(fetchSentData.data));
 
         const newSentDatas = Object.keys(fetchSentData.data).map((key) => {
           return { firebaseId: key, ...fetchSentData.data[key] };
         });
 
-        console.log("newSentDatas", newSentDatas);
+        // console.log("newSentDatas", newSentDatas);
 
         dispatch(
-          userDataActions.replaceSentData(Object.values(fetchSentData.data))
+          userDataActions.replaceSentData(newSentDatas)
         );
 
         dispatch(userDataActions.setSentEmail(newSentDatas[0].to));
@@ -67,13 +67,13 @@ function App() {
           `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`
         );
 
-        console.log("fetchInboxData", fetchInboxData.data);
+        // console.log("fetchInboxData", fetchInboxData.data);
 
         const newInboxDatas = Object.keys(fetchInboxData.data).map((key) => {
           return { firebaseId: key, ...fetchInboxData.data[key] };
         });
 
-        console.log("newInboxDatas", newInboxDatas);
+        // console.log("newInboxDatas", newInboxDatas);
 
         dispatch(userDataActions.replaceInboxData(newInboxDatas));
       } catch (error) {
@@ -84,9 +84,9 @@ function App() {
     fetchAllDatas();
   }, [currentUserEmail, dispatch]);
 
-  if (sentEmail) {
-    console.log("sentEmail", sentEmail);
-  }
+  // if (sentEmail) {
+  //   console.log("sentEmail", sentEmail);
+  // }
 
   // for fetching inboxDatas
 
