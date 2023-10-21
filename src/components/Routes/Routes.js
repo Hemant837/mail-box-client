@@ -4,11 +4,12 @@ import Signup from "../pages/Authentication/Signup";
 import Dashboard from "../Dashboard/Dashboard";
 import RootLayout from "../pages/Root";
 import Inbox from "../Sidebar/SidebarPages/Inbox/Inbox";
-import InboxView from "../Sidebar/SidebarPages/Inbox/InboxView";
+import InboxViewDetails from "../Sidebar/SidebarPages/Inbox/InboxDetails";
 import Starred from "../Sidebar/SidebarPages/Starred";
 import Sent from "../Sidebar/SidebarPages/Sent/Sent";
 import Important from "../Sidebar/SidebarPages/Important";
 import Trash from "../Sidebar/SidebarPages/Trash";
+
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
             path: "/dashboard/inbox",
             element: <Inbox />,
           },
-          { path: "/dashboard/inbox/:inboxId", element: <InboxView /> },
+          { path: "/dashboard/inbox/:inboxId", element: <InboxViewDetails /> },
           {
             path: "/dashboard/starred",
             element: <Starred />,
