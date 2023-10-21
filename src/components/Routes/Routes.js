@@ -4,6 +4,7 @@ import Signup from "../pages/Authentication/Signup";
 import Dashboard from "../Dashboard/Dashboard";
 import RootLayout from "../pages/Root";
 import Inbox from "../Sidebar/SidebarPages/Inbox/Inbox";
+import InboxView from "../Sidebar/SidebarPages/Inbox/InboxView";
 import Starred from "../Sidebar/SidebarPages/Starred";
 import Sent from "../Sidebar/SidebarPages/Sent/Sent";
 import Important from "../Sidebar/SidebarPages/Important";
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
             path: "/dashboard/inbox",
             element: <Inbox />,
           },
+          { path: "/dashboard/inbox/:inboxId", element: <InboxView /> },
           {
             path: "/dashboard/starred",
             element: <Starred />,

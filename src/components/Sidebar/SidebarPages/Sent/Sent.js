@@ -6,7 +6,7 @@ const Sent = () => {
   return (
     <div className="mx-4 mt-2 border w-4/6">
       {sentDatas.map((data) => (
-        <SentView key={data.id} data={data} />
+        <SentView key={data.firebaseId} data={data} />
       ))}
     </div>
   );
