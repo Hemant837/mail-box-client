@@ -26,6 +26,12 @@ const userDataSlice = createSlice({
       state.inboxQuantity++;
     },
 
+    deleteInboxEmails(state, action) {
+      state.inboxDatas = state.inboxDatas.filter(
+        (email) => email.firebaseId !== action.payload
+      );
+    },
+
     setSentEmail(state, action) {
       state.sentEmail = action.payload;
     },

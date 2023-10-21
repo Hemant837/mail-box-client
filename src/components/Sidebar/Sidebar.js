@@ -14,7 +14,7 @@ const numberOfEmails = inboxDatas.reduce((count, email) => {
     dispatch(uiActions.toggle());
   };
   return (
-    <div className="mt-2 w-64 h-max border rounded-md shadow-md">
+    <div className="ml-2 mt-2 w-64 h-max border rounded-md shadow-md">
       {/* Compose Button */}
       <button
         className="mt-2 mx-auto border rounded-md block font-semibold p-3 text-black hover:shadow-md"

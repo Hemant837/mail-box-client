@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 import formatEmail from "../../../Function/Function";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userDataActions } from "../../../../store/userData-slice";
 
 const Inbox = () => {
   const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
   const currentUserEmail = useSelector((state) => state.auth.userEmail);
+  const dispatch = useDispatch();
 
   const inboxDatas = useSelector((state) => state.userData.inboxDatas);
 
@@ -18,6 +20,7 @@ const Inbox = () => {
     } catch (error) {
       console.log(error);
     }
+    dispatch(userDataActions.deleteInboxEmails(id));
   };
 
   return (
