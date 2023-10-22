@@ -13,7 +13,7 @@ const InboxViewDetails = () => {
   return (
     <div className="mx-4 mt-2 border w-5/6">
       <div className="mx-4 my-4 p-4 border bg-white rounded-md shadow-md">
-        <p className="text-xl font-bold text-blue-600 mb-4">From: {inboxItem.from}</p>
+        <p className="text-xl font-bold  mb-4">From: {inboxItem.from}</p>
         <p className="text-green-600 font-bold text-xl mb-4">
           Subject: {inboxItem.subject}
         </p>

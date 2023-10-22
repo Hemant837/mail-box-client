@@ -64,7 +64,7 @@ const Login = () => {
       dispatch(authActions.setIdToken(loginDetails.data.idToken));
       dispatch(authActions.setUserEmail(loginDetails.data.email));
 
-      navigate("/dashboard");
+      navigate("/dashboard/inbox");
     } catch (error) {
       setIsLoading(false);
       setError("Login failed. Please check your credentials.");

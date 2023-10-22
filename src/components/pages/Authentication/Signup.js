@@ -69,7 +69,7 @@ const Signup = () => {
       dispatch(authActions.setIdToken(signupDetails.data.idToken));
       dispatch(authActions.setUserEmail(signupDetails.data.email));
 
-      navigate("/login");
+      navigate("/dashboard/inbox");
     } catch (error) {
       setIsLoading(false);
       setError("An error occurred during sign up. Please try again.");

@@ -17,7 +17,7 @@ const Sidebar = () => {
     <div className="ml-2 h-screen mt-2 w-64 border rounded-md shadow-md">
       {/* Compose Button */}
       <button
-        className="mt-2 mx-auto border rounded-md block font-semibold p-3 hover:shadow-md bg-blue-500 text-white"
+        className="mt-2 mx-auto border rounded-md block font-semibold p-3 hover:shadow-md"
         onClick={startComposing}
       >
         Compose
@@ -27,7 +27,7 @@ const Sidebar = () => {
           <li className="hover:shadow-md rounded">
             <NavLink to="/dashboard/inbox" className="text-center block p-3">
               Inbox
-              <span className="ml-1 px-2 bg-blue-500 text-white rounded-full">
+              <span className="ml-1 px-2 bg-gray-400 text-white rounded-full">
                 {numberOfEmails}
               </span>
             </NavLink>

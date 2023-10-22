@@ -32,9 +32,11 @@ const Sent = () => {
         >
           <Link to={`/dashboard/sent/${data.firebaseId}`}>
             <div className="p-4">
-              <p className="text-blue-600 font-bold">To: {data.to}</p>
-              <p className="text-green-600 font-bold">Subject: {data.subject}</p>
-              <p className="text-gray-800">{data.message}</p>
+              <p className=" font-bold">To: {data.to}</p>
+              <p className="text-green-600 font-bold">
+                Subject: {data.subject}
+              </p>
+              <p>{data.message}</p>
             </div>
           </Link>
           <button

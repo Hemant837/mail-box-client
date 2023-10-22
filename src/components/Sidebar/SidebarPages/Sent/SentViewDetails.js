@@ -13,7 +13,7 @@ const SentViewDetails = () => {
   return (
     <div className="mx-4 mt-2 border w-5/6">
       <div className="mx-4 my-4 p-4 border bg-white rounded-md shadow-md">
-        <p className="text-lg font-bold text-blue-500 mb-4">To: {sentItem.to}</p>
+        <p className="text-lg font-bold mb-4">To: {sentItem.to}</p>
         <p className="text-green-600 font-bold text-lg mb-4">
           Subject: {sentItem.subject}
         </p>

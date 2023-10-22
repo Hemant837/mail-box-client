@@ -13,7 +13,6 @@ function App() {
   const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
 
   const currentUserEmail = useSelector((state) => state.auth.userEmail);
-  // const sentEmail = useSelector((state) => state.userData.sentEmail);
 
   const dispatch = useDispatch();
 
@@ -27,7 +26,7 @@ function App() {
             { idToken: idToken }
           );
 
-          console.log(userDetails.data);
+          // console.log(userDetails.data);
           dispatch(authActions.setIdToken(idToken));
           dispatch(authActions.setUserEmail(userDetails.data.users[0].email));
           dispatch(authActions.isLogin());
@@ -37,7 +36,32 @@ function App() {
       };
       fetchUserLogin();
     }
-  }, [dispatch]);
+    // Function to fetch the list of emails
+    const fetchEmailList = async () => {
+      try {
+        const response = await axios.get(
+          `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`
+        );
+        const newInboxDatas = Object.keys(response.data).map((key) => {
+          return { firebaseId: key, ...response.data[key] };
+        });
+
+        dispatch(userDataActions.replaceInboxData(newInboxDatas));
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    // call to fetch emails
+    fetchEmailList();
+
+    // Use setInterval to call the API every 2 seconds
+    const intervalId = setInterval(fetchEmailList, 2000);
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [currentUserEmail, dispatch]);
 
   // console.log(currentUserEmail);
 
@@ -57,25 +81,21 @@ function App() {
 
         // console.log("newSentDatas", newSentDatas);
 
-        dispatch(
-          userDataActions.replaceSentData(newSentDatas)
-        );
+        dispatch(userDataActions.replaceSentData(newSentDatas));
 
         dispatch(userDataActions.setSentEmail(newSentDatas[0].to));
 
-        const fetchInboxData = await axios.get(
-          `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`
-        );
+        // const fetchInboxData = await axios.get(
+        //   `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`
+        // );
 
-        // console.log("fetchInboxData", fetchInboxData.data);
+        // const newInboxDatas = Object.keys(fetchInboxData.data).map((key) => {
+        //   return { firebaseId: key, ...fetchInboxData.data[key] };
+        // });
 
-        const newInboxDatas = Object.keys(fetchInboxData.data).map((key) => {
-          return { firebaseId: key, ...fetchInboxData.data[key] };
-        });
+        // // console.log("newInboxDatas", newInboxDatas);
 
-        // console.log("newInboxDatas", newInboxDatas);
-
-        dispatch(userDataActions.replaceInboxData(newInboxDatas));
+        // dispatch(userDataActions.replaceInboxData(newInboxDatas));
       } catch (error) {
         console.log(error);
       }
