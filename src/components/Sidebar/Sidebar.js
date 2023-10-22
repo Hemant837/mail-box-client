@@ -6,18 +6,18 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const inboxDatas = useSelector((state) => state.userData.inboxDatas);
 
-const numberOfEmails = inboxDatas.reduce((count, email) => {
-  return email.read ? count : count + 1;
-}, 0);
+  const numberOfEmails = inboxDatas.reduce((count, email) => {
+    return email.read ? count : count + 1;
+  }, 0);
 
   const startComposing = () => {
     dispatch(uiActions.toggle());
   };
   return (
-    <div className="ml-2 mt-2 w-64 h-max border rounded-md shadow-md">
+    <div className="ml-2 h-screen mt-2 w-64 border rounded-md shadow-md">
       {/* Compose Button */}
       <button
-        className="mt-2 mx-auto border rounded-md block font-semibold p-3 text-black hover:shadow-md"
+        className="mt-2 mx-auto border rounded-md block font-semibold p-3 hover:shadow-md bg-blue-500 text-white"
         onClick={startComposing}
       >
         Compose
@@ -27,7 +27,9 @@ const numberOfEmails = inboxDatas.reduce((count, email) => {
           <li className="hover:shadow-md rounded">
             <NavLink to="/dashboard/inbox" className="text-center block p-3">
               Inbox
-              <span className="ml-0.5 rounder bg-gray-300 rounded-xl p-1">{numberOfEmails}</span>
+              <span className="ml-1 px-2 bg-blue-500 text-white rounded-full">
+                {numberOfEmails}
+              </span>
             </NavLink>
           </li>
           <li className="hover:shadow-md rounded">

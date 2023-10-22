@@ -42,6 +42,16 @@ const userDataSlice = createSlice({
     setSentEmail(state, action) {
       state.sentEmail = action.payload;
     },
+    
+    markMessageAsRead(state, action) {
+      const messageId = action.payload;
+      const message = state.inboxDatas.find(
+        (item) => item.firebaseId === messageId
+      );
+      if (message) {
+        message.read = true;
+      }
+    },
   },
 });
 

@@ -26,21 +26,22 @@ const Sent = () => {
   return (
     <div className="mx-4 mt-2 w-5/6 border rounded-md shadow-md">
       {sentDatas.map((data) => (
-        <div className="flex items-center">
+        <div
+          className="flex items-center justify-between w-11/12 p-2 my-2 mx-2 border rounded-md shadow-md"
+          key={data.firebaseId}
+        >
           <Link to={`/dashboard/sent/${data.firebaseId}`}>
-            <div className="mx-2 my-2 border p-4 flex rounded-md shadow-md justify-between items-center">
+            <div className="p-4">
               <p className="text-blue-600 font-bold">To: {data.to}</p>
-              <p className="text-green-600 font-bold">
-                Subject: {data.subject}
-              </p>
-              <p>{data.message}</p>
+              <p className="text-green-600 font-bold">Subject: {data.subject}</p>
+              <p className="text-gray-800">{data.message}</p>
             </div>
           </Link>
           <button
             onClick={() => emailDeleteHandler(data.firebaseId)}
-            className="font-semibold border p-1.5 rounded-lg hover:border-black"
+            className="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600"
           >
-            X
+            Delete
           </button>
         </div>
       ))}
