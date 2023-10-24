@@ -14,17 +14,23 @@ const userDataSlice = createSlice({
       state.sentDatas = action.payload;
     },
     replaceInboxData(state, action) {
-      state.inboxDatas = action.payload;
+      if (action.payload.length > 0) {
+        state.inboxDatas = action.payload;
+      } else {
+        // Handle the case when there is no data
+        // You can set the state to an empty array or take another appropriate action.
+        state.inboxDatas = [];
+      }
     },
 
     setSentDatas(state, action) {
       state.sentDatas.push(action.payload);
-      state.sentQuantity++;
     },
 
     setInboxDatas(state, action) {
-      state.inboxDatas.push(action.payload);
-      state.inboxQuantity++;
+      if (action.payload) {
+        state.inboxDatas.push(action.payload);
+      }
     },
 
     deleteInboxEmails(state, action) {
@@ -42,7 +48,7 @@ const userDataSlice = createSlice({
     setSentEmail(state, action) {
       state.sentEmail = action.payload;
     },
-    
+
     markMessageAsRead(state, action) {
       const messageId = action.payload;
       const message = state.inboxDatas.find(

@@ -8,7 +8,9 @@ function useDataFetching(url, dataKey, dispatch) {
     const fetchData = async () => {
       try {
         const response = await axios.get(url);
-        const data = Object.keys(response.data).map((key) => ({
+
+        // Safely access the property
+        const data = Object.keys(response.data || {}).map((key) => ({
           firebaseId: key,
           ...response.data[key],
         }));

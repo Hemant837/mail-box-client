@@ -13,6 +13,8 @@ const Inbox = () => {
   const dispatch = useDispatch();
   const inboxDatas = useSelector((state) => state.userData.inboxDatas);
 
+  console.log(inboxDatas);
+
   const emailDeleteHandler = async (id) => {
     try {
       await axios.delete(

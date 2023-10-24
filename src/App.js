@@ -36,7 +36,6 @@ function App() {
     }
   }, [currentUserEmail, dispatch]);
 
-  // Use the custom hook for inbox data
   useDataFetching(
     `${baseURL}/${formatEmail(currentUserEmail)}/inbox.json`,
     userDataActions.replaceInboxData,
