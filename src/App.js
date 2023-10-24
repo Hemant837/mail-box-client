@@ -12,7 +12,7 @@ function App() {
   const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
 
   const currentUserEmail = useSelector((state) => state.auth.userEmail);
-
+  // console.log(currentUserEmail);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,7 +25,6 @@ function App() {
             { idToken: idToken }
           );
 
-          // console.log(userDetails.data);
           dispatch(authActions.setIdToken(idToken));
           dispatch(authActions.setUserEmail(userDetails.data.users[0].email));
           dispatch(authActions.isLogin());
@@ -37,19 +36,19 @@ function App() {
     }
   }, [currentUserEmail, dispatch]);
 
-// Use the custom hook for inbox data
-useDataFetching(
-  `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`,
-  userDataActions.replaceInboxData,
-  dispatch
-);
+  // Use the custom hook for inbox data
+  useDataFetching(
+    `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`,
+    userDataActions.replaceInboxData,
+    dispatch
+  );
 
- // Use the custom hook for sent data
- useDataFetching(
-  `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`,
-  userDataActions.replaceSentData,
-  dispatch
-);
+  // Use the custom hook for sent data
+  useDataFetching(
+    `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`,
+    userDataActions.replaceSentData,
+    dispatch
+  );
 
   return <RouterProvider router={router}></RouterProvider>;
 }
