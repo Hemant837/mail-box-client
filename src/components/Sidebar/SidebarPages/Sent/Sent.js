@@ -15,7 +15,7 @@ const Sent = () => {
   const emailDeleteHandler = async (id) => {
     try {
       const deleteEmail = await axios.delete(
-        `${baseURL}/sent/${formatEmail(currentUserEmail)}/${id}.json`
+        `${baseURL}/${formatEmail(currentUserEmail)}/sent/${id}.json`
       );
       console.log(deleteEmail);
     } catch (error) {

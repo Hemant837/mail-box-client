@@ -71,13 +71,13 @@ const TextEditor = () => {
 
     try {
       const inboxDatasResponse = await axios.post(
-        `${baseURL}/inbox/${formatEmail(toEmail)}.json`,
+        `${baseURL}/${formatEmail(toEmail)}/inbox.json`,
         inboxDatas
       );
       console.log(inboxDatasResponse.data);
 
       const sentDatasResposne = await axios.post(
-        `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`,
+        `${baseURL}/${formatEmail(currentUserEmail)}/sent.json`,
         sentDatas
       );
       console.log(sentDatasResposne.data);

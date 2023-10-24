@@ -38,14 +38,14 @@ function App() {
 
   // Use the custom hook for inbox data
   useDataFetching(
-    `${baseURL}/inbox/${formatEmail(currentUserEmail)}.json`,
+    `${baseURL}/${formatEmail(currentUserEmail)}/inbox.json`,
     userDataActions.replaceInboxData,
     dispatch
   );
 
   // Use the custom hook for sent data
   useDataFetching(
-    `${baseURL}/sent/${formatEmail(currentUserEmail)}.json`,
+    `${baseURL}/${formatEmail(currentUserEmail)}/sent.json`,
     userDataActions.replaceSentData,
     dispatch
   );

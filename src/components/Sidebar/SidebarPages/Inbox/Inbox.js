@@ -16,7 +16,7 @@ const Inbox = () => {
   const emailDeleteHandler = async (id) => {
     try {
       await axios.delete(
-        `${baseURL}/inbox/${formatEmail(currentUserEmail)}/${id}.json`
+        `${baseURL}/${formatEmail(currentUserEmail)}/inbox/${id}.json`
       );
       dispatch(userDataActions.deleteInboxEmails(id));
     } catch (error) {
@@ -28,7 +28,7 @@ const Inbox = () => {
     dispatch(userDataActions.markMessageAsRead(id));
     try {
       await axios.patch(
-        `${baseURL}/inbox/${formatEmail(currentUserEmail)}/${id}.json`,
+        `${baseURL}/${formatEmail(currentUserEmail)}/inbox/${id}.json`,
         { read: true }
       );
     } catch (error) {
