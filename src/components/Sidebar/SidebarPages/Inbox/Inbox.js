@@ -54,8 +54,8 @@ const Inbox = () => {
         >
           <div className="flex items-center w-full">
             <span
-              className={`w-3 h-3 rounded-lg mr-1 bg-${
-                data.read ? "gray-200" : "blue-500"
+              className={`w-3 h-3 border rounded-lg mr-1 bg-${
+                data.read ? "gray-400" : "blue-500"
               }`}
             ></span>
             <AiOutlineStar

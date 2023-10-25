@@ -40,7 +40,7 @@ function App() {
     `${baseURL}/${formatEmail(currentUserEmail)}/inbox.json`,
     userDataActions.replaceInboxData,
     dispatch,
-    1000
+    800
   );
 
   // for fetching sentDatas
