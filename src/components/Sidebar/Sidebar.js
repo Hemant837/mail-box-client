@@ -6,13 +6,13 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const inboxDatas = useSelector((state) => state.userData.inboxDatas);
 
-  const numberOfEmails = inboxDatas.reduce((count, email) => {
-    return email.read ? count : count + 1;
-  }, 0);
+  // Calculate the number of unread emails
+  const numberOfEmails = inboxDatas.filter((email) => !email.read).length;
 
   const startComposing = () => {
     dispatch(uiActions.toggle());
   };
+
   return (
     <div className="ml-2 h-screen mt-2 w-64 border rounded-md shadow-md">
       {/* Compose Button */}
@@ -27,9 +27,11 @@ const Sidebar = () => {
           <li className="hover:shadow-md rounded">
             <NavLink to="/dashboard/inbox" className="text-center block p-3">
               Inbox
-              <span className="ml-1 px-2 bg-gray-400 text-white rounded-full">
-                {numberOfEmails}
-              </span>
+              {numberOfEmails > 0 && (
+                <span className="ml-1 px-2 bg-gray-400 text-white rounded-full">
+                  {numberOfEmails}
+                </span>
+              )}
             </NavLink>
           </li>
           <li className="hover:shadow-md rounded">

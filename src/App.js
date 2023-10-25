@@ -39,15 +39,32 @@ function App() {
   useDataFetching(
     `${baseURL}/${formatEmail(currentUserEmail)}/inbox.json`,
     userDataActions.replaceInboxData,
-    dispatch
+    dispatch,
+    1000
   );
 
-  // Use the custom hook for sent data
-  useDataFetching(
-    `${baseURL}/${formatEmail(currentUserEmail)}/sent.json`,
-    userDataActions.replaceSentData,
-    dispatch
-  );
+  // for fetching sentDatas
+  useEffect(() => {
+    const fetchAllDatas = async () => {
+      try {
+        const fetchSentData = await axios.get(
+          `${baseURL}/${formatEmail(currentUserEmail)}/sent.json`
+        );
+
+        const newSentDatas = Object.keys(fetchSentData.data).map((key) => {
+          return { firebaseId: key, ...fetchSentData.data[key] };
+        });
+
+        dispatch(userDataActions.replaceSentData(newSentDatas));
+
+        dispatch(userDataActions.setSentEmail(newSentDatas[0].to));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchAllDatas();
+  }, [currentUserEmail, dispatch]);
 
   return <RouterProvider router={router}></RouterProvider>;
 }

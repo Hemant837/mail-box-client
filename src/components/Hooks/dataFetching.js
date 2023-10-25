@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 
-function useDataFetching(url, dataKey, dispatch) {
+function useDataFetching(url, dataKey, dispatch, time) {
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,11 +24,11 @@ function useDataFetching(url, dataKey, dispatch) {
     fetchData();
 
     // Set up an interval to fetch data every 2 seconds
-    const intervalId = setInterval(fetchData, 2000);
+    const intervalId = setInterval(fetchData, time);
 
     // Clean up the interval on unmount
     return () => clearInterval(intervalId);
-  }, [url, dispatch, dataKey]);
+  }, [url, dispatch, dataKey, time]);
 }
 
 export default useDataFetching;

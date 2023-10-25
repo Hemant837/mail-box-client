@@ -14,13 +14,7 @@ const userDataSlice = createSlice({
       state.sentDatas = action.payload;
     },
     replaceInboxData(state, action) {
-      if (action.payload.length > 0) {
-        state.inboxDatas = action.payload;
-      } else {
-        // Handle the case when there is no data
-        // You can set the state to an empty array or take another appropriate action.
-        state.inboxDatas = [];
-      }
+      state.inboxDatas = action.payload;
     },
 
     setSentDatas(state, action) {
@@ -28,9 +22,7 @@ const userDataSlice = createSlice({
     },
 
     setInboxDatas(state, action) {
-      if (action.payload) {
-        state.inboxDatas.push(action.payload);
-      }
+      state.inboxDatas.push(action.payload);
     },
 
     deleteInboxEmails(state, action) {
