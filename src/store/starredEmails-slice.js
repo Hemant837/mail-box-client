@@ -5,7 +5,25 @@ const starredEmailsSlice = createSlice({
   initialState: { starredEmailsData: [] },
   reducers: {
     addStarredEmail(state, action) {
-      state.starredEmailsData.push(action.payload);
+      const starredEmailId = action.payload;
+      const starredEmail = state.starredEmailsData.find(
+        (item) => item.firebaseId === starredEmailId
+      );
+      if (!starredEmail) {
+        state.starredEmailsData.push(action.payload);
+      }
+    },
+    replaceStarredEmail(state, action) {
+      state.starredEmailsData = action.payload;
+    },
+    markedAsStarred(state, action) {
+      const starredEmailId = action.payload;
+      const starredEmail = state.starredEmailsData.find(
+        (item) => item.firebaseId === starredEmailId
+      );
+      if (starredEmail) {
+        starredEmail.starred = true;
+      }
     },
   },
 });

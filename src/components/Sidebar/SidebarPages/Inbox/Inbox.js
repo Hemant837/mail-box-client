@@ -5,21 +5,19 @@ import formatEmail from "../../../Function/Function";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../../../../store/userData-slice";
 import { starredEmailsActions } from "../../../../store/starredEmails-slice";
-import { AiOutlineDelete, AiOutlineStar } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineStar, AiFillStar } from "react-icons/ai";
 
 const Inbox = () => {
-  const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com";
   const currentUserEmail = useSelector((state) => state.auth.userEmail);
+  const baseURL = `https://mail-box-client-8c444-default-rtdb.firebaseio.com/${formatEmail(
+    currentUserEmail
+  )}`;
   const dispatch = useDispatch();
   const inboxDatas = useSelector((state) => state.userData.inboxDatas);
 
-  console.log(inboxDatas);
-
   const emailDeleteHandler = async (id) => {
     try {
-      await axios.delete(
-        `${baseURL}/${formatEmail(currentUserEmail)}/inbox/${id}.json`
-      );
+      await axios.delete(`${baseURL}/inbox/${id}.json`);
       dispatch(userDataActions.deleteInboxEmails(id));
     } catch (error) {
       console.log(error);
@@ -29,18 +27,23 @@ const Inbox = () => {
   const markedReadHandler = async (id) => {
     dispatch(userDataActions.markMessageAsRead(id));
     try {
-      await axios.patch(
-        `${baseURL}/${formatEmail(currentUserEmail)}/inbox/${id}.json`,
-        { read: true }
-      );
+      await axios.patch(`${baseURL}/inbox/${id}.json`, { read: true });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const addToStarredHandler = (data) => {
-    console.log(data);
-    dispatch(starredEmailsActions.addStarredEmail(data));
+  const addToStarredHandler = async (data) => {
+    const starredData = { ...data, starred: true };
+    try {
+      await axios.post(`${baseURL}/starred.json`, starredData);
+      await axios.patch(`${baseURL}/inbox/${data.firebaseId}.json`, {
+        starred: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(starredEmailsActions.addStarredEmail(starredData));
   };
 
   return (
@@ -58,10 +61,15 @@ const Inbox = () => {
                 data.read ? "gray-400" : "blue-500"
               }`}
             ></span>
-            <AiOutlineStar
-              className="text-yellow-400 cursor-pointer hover:shadow-md"
-              onClick={() => addToStarredHandler(data)}
-            />
+            {data.starred ? (
+              <AiFillStar className="text-yellow-400 cursor-pointer" />
+            ) : (
+              <AiOutlineStar
+                className="text-yellow-400 cursor-pointer"
+                onClick={() => addToStarredHandler(data)}
+              />
+            )}
+
             <Link
               to={`/dashboard/inbox/${data.firebaseId}`}
               onClick={() => markedReadHandler(data.firebaseId)}

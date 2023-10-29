@@ -51,6 +51,8 @@ const TextEditor = () => {
       message: message,
       time: formattedDate,
       read: false,
+      starred: false,
+      important: false,
       recieve: false,
       send: true,
       sender: currentUserEmail, // vermahemant837@gmail.com
@@ -64,6 +66,8 @@ const TextEditor = () => {
       message: message,
       time: formattedDate,
       read: false,
+      starred: false,
+      important: false,
       recieve: true,
       send: false,
       to: toEmail, // vermahemant095@gmail.com

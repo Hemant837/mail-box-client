@@ -7,9 +7,10 @@ import { authActions } from "./store/auth-slice";
 import router from "./components/Routes/Routes";
 import { userDataActions } from "./store/userData-slice";
 import useDataFetching from "./components/Hooks/dataFetching";
+import { starredEmailsActions } from "./store/starredEmails-slice";
 
 function App() {
-  const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
+  const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com";
 
   const currentUserEmail = useSelector((state) => state.auth.userEmail);
   // console.log(currentUserEmail);
@@ -40,7 +41,7 @@ function App() {
     `${baseURL}/${formatEmail(currentUserEmail)}/inbox.json`,
     userDataActions.replaceInboxData,
     dispatch,
-    800
+    1000
   );
 
   // for fetching sentDatas
@@ -64,6 +65,25 @@ function App() {
     };
 
     fetchAllDatas();
+  }, [currentUserEmail, dispatch]);
+
+  useEffect(() => {
+    const fetchStarredData = async () => {
+      try {
+        const response = await axios.get(
+          `${baseURL}/${formatEmail(currentUserEmail)}/starred.json`
+        );
+        const newStarredData = Object.keys(response.data).map((key) => {
+          return { ...response.data[key] };
+        });
+
+        dispatch(starredEmailsActions.replaceStarredEmail(newStarredData));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStarredData();
   }, [currentUserEmail, dispatch]);
 
   return <RouterProvider router={router}></RouterProvider>;
