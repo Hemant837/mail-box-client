@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import TextEditor from "./TextEditor";
+import Compose from "./Compose";
 import Sidebar from "../Sidebar/Sidebar";
 import { Outlet } from "react-router";
 
@@ -10,7 +10,7 @@ const Dashboard = () => {
   return (
     <div className="flex">
       <Sidebar />
-      {isComposing && <TextEditor />}
+      {isComposing && <Compose />}
       {!isComposing && <Outlet />}
     </div>
   );

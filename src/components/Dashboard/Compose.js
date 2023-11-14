@@ -8,7 +8,7 @@ import { userDataActions } from "../../store/userData-slice";
 import axios from "axios";
 import formatEmail from "../Function/Function";
 
-const TextEditor = () => {
+const Compose = () => {
   const baseURL = "https://mail-box-client-8c444-default-rtdb.firebaseio.com/";
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
@@ -144,4 +144,4 @@ const TextEditor = () => {
   );
 };
 
-export default TextEditor;
+export default Compose;
